@@ -8,13 +8,31 @@ import {
   InputGroup,
   InputRightElement,
 } from "@chakra-ui/react";
+import useAuthContext from "hooks/useAuthContext";
 import { useState } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const auth = useAuthContext();
+
   const [showPassword, setShowPassword] = useState(false);
 
+  const from = location.state?.from?.pathname || "/";
+
   const handleShowPassword = () => setShowPassword(!showPassword);
+
+  const handleLoginSubmit = () => {
+    const newUser = {
+      name: "Babu",
+    };
+
+    auth.login(newUser, () => {
+      navigate(from, { replace: true });
+    });
+  };
 
   return (
     <>
@@ -47,7 +65,7 @@ const Login = () => {
         </InputGroup>
       </FormControl>
 
-      <Button marginTop="1rem" colorScheme="teal" width="100%">
+      <Button marginTop="1rem" colorScheme="teal" width="100%" onClick={handleLoginSubmit}>
         Login
       </Button>
     </>
