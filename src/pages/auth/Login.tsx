@@ -8,15 +8,18 @@ import {
   InputGroup,
   InputRightElement,
 } from "@chakra-ui/react";
-import useAuthContext from "hooks/useAuthContext";
 import { useState } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { useLocation, useNavigate } from "react-router-dom";
+
+import useAuthContext from "hooks/useAuthContext";
+import useLoginMutation from "./apis/useLoginMutation";
 
 const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const auth = useAuthContext();
+  const loginMutation = useLoginMutation();
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -26,12 +29,23 @@ const Login = () => {
 
   const handleLoginSubmit = () => {
     const newUser = {
-      name: "Babu",
+      username: "Babu",
+      password: "qwe",
     };
 
-    auth.login(newUser, () => {
-      navigate(from, { replace: true });
-    });
+    loginMutation
+      .mutateAsync(newUser)
+      .then(({ data }) => {
+        auth.handleUserLogin(data);
+        navigate(from);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    // auth.login(newUser, () => {
+    //   navigate(from, { replace: true });
+    // });
   };
 
   return (

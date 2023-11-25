@@ -1,9 +1,9 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useState } from "react";
 
 interface AuthContextType {
   user: any; // TODO: update type
-  login: (user: any, callback: VoidFunction) => void;
-  signout: (callback: VoidFunction) => void;
+  handleUserLogin: (user: any) => void;
+  handleUserLogout: () => void;
 }
 
 export const AuthContext = createContext<AuthContextType>(null!);
@@ -11,16 +11,15 @@ export const AuthContext = createContext<AuthContextType>(null!);
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<any>(null);
 
-  const login = (newUser: any, callback: VoidFunction) => {
+  const handleUserLogin = (newUser: any) => {
     setUser(newUser);
-    callback();
   };
 
-  const signout = (callback: VoidFunction) => {
+  const handleUserLogout = () => {
     setUser(null);
   };
 
-  const value = { user, login, signout };
+  const value = { user, handleUserLogin, handleUserLogout };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
