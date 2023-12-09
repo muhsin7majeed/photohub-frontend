@@ -2,22 +2,18 @@ import { Box, Heading } from "@chakra-ui/layout";
 import { Route, Routes, useNavigate } from "react-router-dom";
 
 import AuthLayout from "layouts/AuthLayout";
-import Login from "pages/auth/Login";
-import SignIn from "pages/auth/SignIn";
 import Home from "pages/home/Home";
 import { Button } from "@chakra-ui/react";
 import RequireAuth from "components/RequireAuth";
 import useAuthContext from "hooks/useAuthContext";
+import SignUp from "pages/auth/SignUp";
+import SignIn from "pages/auth/Signin";
 
 function App() {
   const auth = useAuthContext();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    auth.handleUserLogout(() => {
-      navigate("/account");
-    });
-  };
+  const handleLogout = () => {};
   console.log({ auth });
 
   return (
@@ -27,8 +23,8 @@ function App() {
 
         <Routes>
           <Route path="account" element={<AuthLayout />}>
-            <Route index element={<Login />} />
-            <Route path="new" element={<SignIn />} />
+            <Route index element={<SignIn />} />
+            <Route path="new" element={<SignUp />} />
           </Route>
 
           <Route

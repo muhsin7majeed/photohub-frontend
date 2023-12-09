@@ -20,7 +20,7 @@ import { IUserLoginValues } from "types/user";
 import useLoginMutation from "./apis/useLoginMutation";
 import { loginYupSchema } from "./yup.schema";
 
-const Login = () => {
+const SignIn = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const auth = useAuthContext();
@@ -58,7 +58,7 @@ const Login = () => {
   return (
     <>
       <Heading as="h2" size="sx" marginBottom="1rem">
-        Login to your account
+        SignIn to your account
       </Heading>
 
       <Formik
@@ -116,7 +116,7 @@ const Login = () => {
               type="submit"
               isLoading={loginMutation.isPending}
             >
-              Login
+              SignIn
             </Button>
           </Form>
         )}
@@ -125,4 +125,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default SignIn;

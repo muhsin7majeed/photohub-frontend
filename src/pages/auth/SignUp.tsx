@@ -11,7 +11,7 @@ import {
 import { useState } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 
-const SignIn = () => {
+const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleShowPassword = () => setShowPassword(!showPassword);
@@ -67,10 +67,10 @@ const SignIn = () => {
       </FormControl>
 
       <Button marginTop="1rem" colorScheme="teal" width="100%">
-        SignIn
+        SignUp
       </Button>
     </>
   );
 };
 
-export default SignIn;
+export default SignUp;
