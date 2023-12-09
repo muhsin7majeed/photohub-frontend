@@ -14,7 +14,7 @@ function App() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    auth.signout(() => {
+    auth.handleUserLogout(() => {
       navigate("/account");
     });
   };

@@ -7,19 +7,25 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import { Field, Form, Formik } from "formik";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { useLocation, useNavigate } from "react-router-dom";
 
+import FormikErrorMessage from "components/Elements/FormikErrorMessage";
 import useAuthContext from "hooks/useAuthContext";
+import { IUserLoginValues } from "types/user";
 import useLoginMutation from "./apis/useLoginMutation";
+import { loginYupSchema } from "./yup.schema";
 
 const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const auth = useAuthContext();
   const loginMutation = useLoginMutation();
+  const toast = useToast();
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -27,25 +33,26 @@ const Login = () => {
 
   const handleShowPassword = () => setShowPassword(!showPassword);
 
-  const handleLoginSubmit = () => {
-    const newUser = {
-      username: "Babu",
-      password: "qwe",
-    };
+  const handleLoginSubmit = (values: IUserLoginValues) => {
+    const payload: IUserLoginValues = values;
 
     loginMutation
-      .mutateAsync(newUser)
+      .mutateAsync(payload)
       .then(({ data }) => {
         auth.handleUserLogin(data);
         navigate(from);
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
+        toast({
+          title: "Something went wrong!",
+          status: "error",
+        });
       });
+  };
 
-    // auth.login(newUser, () => {
-    //   navigate(from, { replace: true });
-    // });
+  const initialValues = {
+    username: "",
+    password: "",
   };
 
   return (
@@ -54,34 +61,66 @@ const Login = () => {
         Login to your account
       </Heading>
 
-      <FormControl>
-        <FormLabel>Username</FormLabel>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={loginYupSchema}
+        onSubmit={handleLoginSubmit}
+      >
+        {({ errors, handleSubmit }) => (
+          <Form onSubmit={handleSubmit}>
+            <FormControl isInvalid={Boolean(errors.username)}>
+              <FormLabel>Username*</FormLabel>
 
-        <Input type="text" placeholder="Enter username" colorScheme="teal" />
-      </FormControl>
+              <Field
+                as={Input}
+                type="text"
+                name="username"
+                placeholder="Enter username"
+                colorScheme="teal"
+              />
 
-      <FormControl marginTop="1rem">
-        <FormLabel>Password</FormLabel>
+              <FormikErrorMessage name="username" />
+            </FormControl>
 
-        <InputGroup size="md">
-          <Input type={showPassword ? "text" : "password"} placeholder="Enter password" colorScheme="teal" />
+            <FormControl marginTop="1rem" isInvalid={Boolean(errors.password)}>
+              <FormLabel>Password*</FormLabel>
 
-          <InputRightElement>
-            <IconButton
+              <InputGroup size="md">
+                <Field
+                  as={Input}
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter password"
+                  colorScheme="teal"
+                />
+
+                <InputRightElement>
+                  <IconButton
+                    colorScheme="teal"
+                    aria-label="show password"
+                    size="sm"
+                    variant="ghost"
+                    icon={showPassword ? <AiFillEyeInvisible /> : <AiFillEye />}
+                    onClick={handleShowPassword}
+                  />
+                </InputRightElement>
+              </InputGroup>
+
+              <FormikErrorMessage name="password" />
+            </FormControl>
+
+            <Button
+              marginTop="1rem"
               colorScheme="teal"
-              aria-label="show password"
-              size="sm"
-              variant="ghost"
-              icon={showPassword ? <AiFillEyeInvisible /> : <AiFillEye />}
-              onClick={handleShowPassword}
-            />
-          </InputRightElement>
-        </InputGroup>
-      </FormControl>
-
-      <Button marginTop="1rem" colorScheme="teal" width="100%" onClick={handleLoginSubmit}>
-        Login
-      </Button>
+              width="100%"
+              type="submit"
+              isLoading={loginMutation.isPending}
+            >
+              Login
+            </Button>
+          </Form>
+        )}
+      </Formik>
     </>
   );
 };
