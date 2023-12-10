@@ -1,13 +1,13 @@
 import { Button, Box } from "@chakra-ui/react";
+import useAuth from "hooks/useAuth";
 
-import useAuthContext from "hooks/useAuthContext";
 import { AppRoutes } from "routes";
 
 function App() {
-  const auth = useAuthContext();
-
-  const handleLogout = () => {};
-  console.log({ auth });
+  const auth = useAuth();
+  const handleLogout = () => {
+    auth.handleSignOut();
+  };
 
   return (
     <>

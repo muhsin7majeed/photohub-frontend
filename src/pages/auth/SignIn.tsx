@@ -14,8 +14,8 @@ import { Field, Form, Formik } from "formik";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { useLocation, useNavigate } from "react-router-dom";
 
+import useAuth from "hooks/useAuth";
 import FormikErrorMessage from "components/Elements/FormikErrorMessage";
-import useAuthContext from "hooks/useAuthContext";
 import { IUserLoginValues } from "types/user";
 import useLoginMutation from "./apis/useLoginMutation";
 import { loginYupSchema } from "./yup.schema";
@@ -23,7 +23,7 @@ import { loginYupSchema } from "./yup.schema";
 const SignIn = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const auth = useAuthContext();
+  const auth = useAuth();
   const loginMutation = useLoginMutation();
   const toast = useToast();
 
@@ -40,7 +40,7 @@ const SignIn = () => {
     loginMutation
       .mutateAsync(payload)
       .then(({ data }) => {
-        auth.handleUserLogin(data);
+        auth.handleSignIn(data);
         navigate(from);
       })
       .catch(() => {

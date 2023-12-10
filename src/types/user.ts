@@ -3,8 +3,8 @@ export interface IUserLoginValues {
   password: string;
 }
 
-export interface ISignInResponse {
-  message: string;
+export interface IUserData {
   username: string;
   token: string;
+  userId: string;
 }
