@@ -1,8 +1,10 @@
 import { useLocation, useRoutes } from "react-router-dom";
+import { Box } from "@chakra-ui/react";
 
+import useAuth from "hooks/useAuth";
+import Navbar from "components/Navbar";
 import { protectedRoutes } from "./protected";
 import { getPublicRoutes } from "./public";
-import useAuth from "hooks/useAuth";
 
 export const AppRoutes = () => {
   const auth = useAuth();
@@ -14,5 +16,14 @@ export const AppRoutes = () => {
 
   const element = useRoutes([...routes]);
 
-  return <>{auth.isLoading ? <>loading</> : element}</>;
+  return (
+    <>
+      <Box paddingBottom="50px">{element}</Box>
+
+      {auth.user && (
+        // TODO: Is this the best place?
+        <Navbar />
+      )}
+    </>
+  );
 };
