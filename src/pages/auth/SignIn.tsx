@@ -29,7 +29,7 @@ const SignIn = () => {
 
   const [showPassword, setShowPassword] = useState(false);
 
-  // TODO: Fix this
+  // TODO: Fix location from, for auth
   const from = location.state?.from?.pathname || "/";
 
   const handleShowPassword = () => setShowPassword(!showPassword);
