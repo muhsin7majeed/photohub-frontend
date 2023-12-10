@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   FormControl,
   FormLabel,
@@ -10,21 +11,21 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { Field, Form, Formik } from "formik";
+import { Field, Formik } from "formik";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import useAuth from "hooks/useAuth";
+import { IUserSignInValues } from "types/user";
 import FormikErrorMessage from "components/Elements/FormikErrorMessage";
-import { IUserLoginValues } from "types/user";
-import useLoginMutation from "./apis/useLoginMutation";
-import { loginYupSchema } from "./yup.schema";
+import useSignInMutation from "./apis/useSignInMutation";
+import { signInYupSchema } from "./yup.schema";
 
 const SignIn = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const auth = useAuth();
-  const loginMutation = useLoginMutation();
+  const signInMutation = useSignInMutation();
   const toast = useToast();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -34,10 +35,10 @@ const SignIn = () => {
 
   const handleShowPassword = () => setShowPassword(!showPassword);
 
-  const handleLoginSubmit = (values: IUserLoginValues) => {
-    const payload: IUserLoginValues = values;
+  const handleSignInSubmit = (values: IUserSignInValues) => {
+    const payload: IUserSignInValues = values;
 
-    loginMutation
+    signInMutation
       .mutateAsync(payload)
       .then(({ data }) => {
         auth.handleSignIn(data);
@@ -64,13 +65,13 @@ const SignIn = () => {
 
       <Formik
         initialValues={initialValues}
-        validationSchema={loginYupSchema}
-        onSubmit={handleLoginSubmit}
+        validationSchema={signInYupSchema}
+        onSubmit={handleSignInSubmit}
       >
         {({ errors, handleSubmit }) => (
-          <Form onSubmit={handleSubmit}>
+          <Box as="form" textAlign="left" onSubmit={handleSubmit}>
             <FormControl isInvalid={Boolean(errors.username)}>
-              <FormLabel>Username*</FormLabel>
+              <FormLabel fontSize="small">Username*</FormLabel>
 
               <Field
                 as={Input}
@@ -84,7 +85,7 @@ const SignIn = () => {
             </FormControl>
 
             <FormControl marginTop="1rem" isInvalid={Boolean(errors.password)}>
-              <FormLabel>Password*</FormLabel>
+              <FormLabel fontSize="small">Password*</FormLabel>
 
               <InputGroup size="md">
                 <Field
@@ -115,11 +116,11 @@ const SignIn = () => {
               colorScheme="teal"
               width="100%"
               type="submit"
-              isLoading={loginMutation.isPending}
+              isLoading={signInMutation.isPending}
             >
-              SignIn
+              Sign In
             </Button>
-          </Form>
+          </Box>
         )}
       </Formik>
     </>

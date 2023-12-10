@@ -9,16 +9,23 @@ interface AuthProviderTypes {
   children: ReactElement;
 }
 
-const AuthContext = createContext({
+interface AuthContextType {
+  user: IUserData | null;
+  isLoading: boolean;
+  handleSignIn: (user: IUserData) => void;
+  handleSignOut: () => void;
+}
+
+const AuthContext = createContext<AuthContextType>({
   user: null,
   isLoading: false,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  handleSignIn: (_userData: IUserData) => {},
-  handleSignOut: () => {},
+  handleSignIn: (_userData: IUserData) => null,
+  handleSignOut: () => undefined,
 });
 
 const AuthProvider = ({ children }: AuthProviderTypes) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<IUserData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   // TODO: Add axios interceptor for 403
@@ -55,7 +62,7 @@ const AuthProvider = ({ children }: AuthProviderTypes) => {
     setIsLoading(false);
   };
 
-  const handleSignIn = (userData: any) => {
+  const handleSignIn = (userData: IUserData) => {
     storage.setToken(userData.token);
 
     setUser(userData);

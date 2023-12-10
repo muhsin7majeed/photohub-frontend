@@ -9,7 +9,7 @@ const Home = () => {
 
   return (
     <>
-      <Heading>Home Page</Heading>
+      <Heading>Hello {auth?.user?.username}</Heading>
 
       <Button onClick={handleLogout}>Logout</Button>
     </>
