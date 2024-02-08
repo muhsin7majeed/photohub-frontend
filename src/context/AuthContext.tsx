@@ -28,8 +28,7 @@ const AuthProvider = ({ children }: AuthProviderTypes) => {
   const [user, setUser] = useState<IUserData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // TODO: Add axios interceptor for 403
-
+  // TODO: Is the useEffect needed??
   useEffect(() => {
     const token = storage.getToken();
     let interceptor: any;
@@ -53,6 +52,18 @@ const AuthProvider = ({ children }: AuthProviderTypes) => {
       axios.interceptors.request.eject(interceptor);
     };
   }, []);
+
+  axios.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      // Logout user on 403
+      if (error?.response?.status === 403) {
+        handleSignOut();
+      }
+
+      return Promise.reject(error);
+    }
+  );
 
   const handleFetchUser = async () => {
     setIsLoading(true);
@@ -82,9 +93,7 @@ const AuthProvider = ({ children }: AuthProviderTypes) => {
   };
 
   return (
-    <AuthContext.Provider value={contextValue}>
-      {isLoading ? <FullScreenLoader /> : children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={contextValue}>{isLoading ? <FullScreenLoader /> : children}</AuthContext.Provider>
   );
 };
 
