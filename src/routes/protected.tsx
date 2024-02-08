@@ -2,6 +2,7 @@ import { Navigate, RouteObject } from "react-router-dom";
 import { Heading } from "@chakra-ui/react";
 
 import Home from "pages/home/Home";
+import UserProfile from "pages/profile";
 
 export const protectedRoutes: RouteObject[] = [
   {
@@ -20,9 +21,9 @@ export const protectedRoutes: RouteObject[] = [
     element: <Heading>Messages</Heading>,
   },
   {
-    path: "/profile",
+    path: "/profile/:userName",
     index: true,
-    element: <Heading>Profile</Heading>,
+    element: <UserProfile />,
   },
 
   {
